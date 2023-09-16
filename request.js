@@ -12,38 +12,41 @@ exports.getTrafficInfo = async function getTrafficInfo(requestString, requestId,
       //Try making a request to distance matrix api using axios
       const responseJson = await axios.get(requestString);
      
+      var traffic_data = responseJson.data["routes"][0]["legs"][0]
       
+      console.log(traffic_data)
+
       let distance_km ,duration_m, duration_traffic_m, destinations, origins;
 
-      destinations = responseJson.data.destination_addresses[0];
-      origins = responseJson.data.origin_addresses[0];
-      console.log(responseJson.data)
+      destinations = traffic_data.end_address;
+      origins = traffic_data.start_address;
       
       //extract distance,duration and duration in traffic 
-       for (const row in responseJson.data.rows) {
+      // for (const row in responseJson.data.rows) {
       
-       distance_km = responseJson.data.rows[row]["elements"][0].distance.text;
-       duration_traffic_m = responseJson.data.rows[row]["elements"][0].duration_in_traffic.text;
-       duration_m = responseJson.data.rows[row]["elements"][0].duration.text;
+       distance_km = traffic_data.distance.text;
+       duration_traffic_m = traffic_data.duration_in_traffic.value;
+       duration_m = traffic_data.duration.value;
        
-       } 
+      // } 
        
      
+
       const newTrafficData =  await Response.create({
           requestId: requestId,
           departureTime: departureTime,
           distance: distance_km.toString(),
-          duration: duration_m.toString(),
+          duration:duration_m.toString() ,
           trafficDuration: duration_traffic_m.toString(),
           origins: origins.toString(),
           destinations: destinations.toString(),
           provider: "google"
-
         }) ;
 
         console.log(`Item with id ${requestId} inserted in database, row number ${newTrafficData.id}`)
        //logger.info(`Item with id ${newTrafficData.id} inserted in database`)
 
+       
              
     //Catch errors if requests couldnt be made 
     } catch (error) {
@@ -76,3 +79,10 @@ exports.getTrafficInfo = async function getTrafficInfo(requestString, requestId,
     }
   }
 
+  // const getTime = function SecsVal(val) {
+  //   if (val%60 > 0) {
+  //     return `${Math.floor(val/60)} mins ${val%60} secs`
+  //   } else {
+  //     `${Math.floor(val/60)} mins `
+  //   }
+  //  }
