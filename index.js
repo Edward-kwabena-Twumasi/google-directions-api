@@ -15,6 +15,9 @@ const dB = require('./database/dbconn')
 const expressWinston = require('express-winston');
 const { logger, streamLogs } = require('./logger');
 const multer = require('multer');
+const http = require('http');
+require("dotenv").config();
+
 
 var initJob;
 var cancelinitjob=false;
@@ -61,6 +64,33 @@ server.get('/', async (req,res)=>{
 
 
 });
+
+function startApp() {
+  // Implement your logic to start the app
+  console.log('Starting the app in 5 minutes if app is not started manually ...');
+  // You might want to add your app startup logic here
+
+  // Schedule a call to the /start endpoint after 5 minutes
+  setTimeout(() => {
+    // Make an HTTP request to the /start endpoint
+    const options = {
+      hostname: 'localhost', // Change this to your server's hostname or IP address
+      port: port, // Use the correct port number
+      path: '/start',
+      method: 'GET',
+    };
+
+    const req = http.request(options, (res) => {
+      console.log(`HTTP request to /start statusCode: ${res.statusCode}`);
+    });
+
+    req.on('error', (e) => {
+      console.error(`HTTP request to /start error: ${e.message}`);
+    });
+
+    req.end();
+  }, 3 * 60 * 1000); // 5 minutes in milliseconds
+}
 
 const storage = multer.diskStorage({
   destination: './input/',
@@ -494,5 +524,8 @@ if (err) {
 
 //Let server listen on the specified port
 server.listen(port,"0.0.0.0",()=>{
-  console.log( `server listening on http://localhost:${port} at ${(new Date().toUTCString())}`);
+  console.log( `server listening on ${process.env.PORT ? process.env.render_host:"http://localhost"}:${port} at ${(new Date().toUTCString())}`);
+
+  startApp()
+  console.log("...................")
 })
