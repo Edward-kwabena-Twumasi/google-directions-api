@@ -51,6 +51,8 @@ server.set("view engine", "pug");
   //   console.error('Error while deleting records:', err);
   // });
 
+let appStarted = false;
+
   // render homepage
 const dynamicData={"title":"Treck traffic"}
 
@@ -89,7 +91,7 @@ function startApp() {
     });
 
     req.end();
-  }, 3 * 60 * 1000); // 5 minutes in milliseconds
+  }, 5 * 60 * 1000); // 5 minutes in milliseconds
 }
 
 const storage = multer.diskStorage({
@@ -118,6 +120,7 @@ server.post('/upload', upload.single('input'), (req, res) => {
 // start execution
 server.get('/start', (req,res)=> {
 
+ appStarted = true
 const preProcess=require('./preprocessInput');
 
 
@@ -525,6 +528,11 @@ if (err) {
 //Let server listen on the specified port
 server.listen(port,"0.0.0.0",()=>{
   console.log( `server listening on ${process.env.PORT ? process.env.render_host:"http://localhost"}:${port} at ${(new Date().toUTCString())}`);
+
+  if (appStarted) {
+    console.log('App has already been started.');
+    return;
+  }
 
   startApp()
   console.log("...................")
