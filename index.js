@@ -71,7 +71,10 @@ function startApp() {
   // Implement your logic to start the app
   console.log('Starting the app in 5 minutes if app is not started manually ...');
   // You might want to add your app startup logic here
-
+  if (appStarted) {
+    console.log('App has already been started.');
+    return;
+  }
   // Schedule a call to the /start endpoint after 5 minutes
   setTimeout(() => {
     // Make an HTTP request to the /start endpoint
@@ -528,11 +531,6 @@ if (err) {
 //Let server listen on the specified port
 server.listen(port,"0.0.0.0",()=>{
   console.log( `server listening on ${process.env.PORT ? process.env.render_host:"http://localhost"}:${port} at ${(new Date().toUTCString())}`);
-
-  if (appStarted) {
-    console.log('App has already been started.');
-    return;
-  }
 
   startApp()
   console.log("...................")
