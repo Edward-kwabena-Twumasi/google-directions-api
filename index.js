@@ -94,7 +94,7 @@ function startApp() {
     });
 
     req.end();
-  }, 5 * 60 * 1000); // 5 minutes in milliseconds
+  }, 2 * 60 * 1000); // 5 minutes in milliseconds
 }
 
 const storage = multer.diskStorage({

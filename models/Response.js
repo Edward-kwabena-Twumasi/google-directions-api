@@ -4,22 +4,22 @@ const db_url = process.env.PORT ? process.env.live_db : process.env.local_db;
 
 const {Sequelize , Model, DataTypes}  = require('sequelize');
 
-// const sequelize = new Sequelize(db_url,{
-    
-//     dialect: 'postgres',
-//       port: 5432
-
-//   });
-
-  // use sqlite local db 
-  const sequelize = new Sequelize(db_url,{
+const sequelize = new Sequelize(db_url,{
     
     dialect: 'postgres',
-      port: 5432,
-      dialectOptions :{
-        ssl:true
-      }
+      port: 5432
+
   });
+
+  // use sqlite local db 
+//   const sequelize = new Sequelize(db_url,{
+    
+//     dialect: 'postgres',
+//       port: 5432,
+//       dialectOptions :{
+//         ssl:true
+//       }
+//   });
 
 
  class TrafficResponse extends Model {};
