@@ -446,7 +446,7 @@ server.get('/output', async (req, res) => {
     const excelBuffer = myxlsx.write(workbook, { bookType: 'xlsx', type: 'buffer', encoding: 'binary' });
 
       // Save the excel file on the file system
-      const filePath = './database/traffic_data.xlsx';
+      const filePath = `./database/traffic_data_${Date.getTime()}.xlsx`;
       fs.writeFileSync(filePath, excelBuffer);
 
     res.set('Content-Disposition', 'attachment; filename="traffic_data.xlsx"');
